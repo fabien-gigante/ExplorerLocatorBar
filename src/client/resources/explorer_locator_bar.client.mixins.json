@@ -1,0 +1,19 @@
+{
+    "required": true,
+    "package": "com.fabien_gigante.explorer_locator_bar.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "mixins": [],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "overwrites": {
+        "requireAnnotations": true
+    },
+    "client": [
+        "GuiMixin",
+        "LocatorBarRendererMixin",
+        "ClientWaypointManagerMixin",
+        "InventoryMixin",
+        "LocalPlayerMixin"
+    ]
+}

@@ -1,0 +1,8 @@
+classTweaker v1 official
+accessible	class	net/minecraft/client/gui/Gui$ContextualInfo
+accessible	class	net/minecraft/world/waypoints/TrackedWaypoint$Vec3iWaypoint
+accessible	class	net/minecraft/world/waypoints/TrackedWaypoint$AzimuthWaypoint
+accessible	field	net/minecraft/client/resources/WaypointStyleManager	waypointStyles	Ljava/util/Map;
+accessible	field	net/minecraft/world/waypoints/TrackedWaypoint$Vec3iWaypoint	vector	Lnet/minecraft/core/Vec3i;
+accessible	class	net/minecraft/world/level/saveddata/maps/MapItemSavedData$MapDecorationLocation
+accessible	method	net/minecraft/world/level/saveddata/maps/MapItemSavedData$MapDecorationLocation	<init>	(Lnet/minecraft/core/Holder;BBB)V
