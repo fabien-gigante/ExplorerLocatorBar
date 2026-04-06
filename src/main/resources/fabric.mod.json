@@ -2,8 +2,8 @@
 	"schemaVersion": 1,
 	"id": "explorer_locator_bar",
 	"version": "${version}",
-	"name": "Locator Lodestones - Enhanced",
-	"description": "Adds Compass, Maps, Lodestones and more to the Player Locator Bar",
+	"name": "Explorer Locator Bar",
+	"description": "Adds Compass targets and Maps points of interest to the Player Locator Bar",
 	"authors": [
 		"fabien-gigante"
 	],
