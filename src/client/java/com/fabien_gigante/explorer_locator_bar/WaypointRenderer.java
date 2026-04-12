@@ -77,7 +77,7 @@ public class WaypointRenderer {
         if (!(handler instanceof IWaypointAccessor accessor)) return;
         Stream<TrackedWaypoint> waypoints = accessor.getWaypointsUnsorted().stream().filter(waypoint -> !(waypoint instanceof DialWaypoint));
         WaypointMatch best = getBestWaypoint(client, tickCounter, waypoints);
-        if (Math.abs(best.yaw) > 60) return;
+        if (best.waypoint == null || Math.abs(best.yaw) > 60) return;
         
         Optional<Component> textOptional = getWaypointName(best.waypoint);
         if (!textOptional.isPresent()) return;
