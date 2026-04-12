@@ -8,14 +8,18 @@ import com.fabien_gigante.explorer_locator_bar.waypoints.NamedWaypoint;
 
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.waypoints.ClientWaypointManager;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
@@ -55,21 +59,35 @@ public class WaypointRenderer {
             renderNames(client, context, tickCounter, centerY);
     }
 
-    protected static void renderNames(Minecraft client, GuiGraphicsExtractor context, DeltaTracker tickCounter, int centerY) {
-        WaypointTracker waypointTracker = ExplorerLocatorBar.waypointTracker;
-        Stream<TrackedWaypoint> waypoints = waypointTracker.getWaypoints().stream().filter(waypoint -> waypoint instanceof NamedWaypoint);
-        WaypointMatch best = getBestWaypoint(client, tickCounter, waypoints);
-        if (!(best instanceof WaypointMatch(NamedWaypoint waypoint, double yaw)) ||  Math.abs(yaw) > 60) return;
+    protected static Optional<Component> getWaypointName(TrackedWaypoint waypoint) {
+        if (waypoint instanceof NamedWaypoint named) return named.getName();
+        // Could be a known player
+        UUID uuid = waypoint.id().left().orElse(null);
+        if (uuid == null) return Optional.empty(); 
+        ClientPacketListener client = Minecraft.getInstance().getConnection();
+        PlayerInfo playerInfo = client.getPlayerInfo(uuid);
+        if (playerInfo == null) return Optional.empty(); 
+        Component name = playerInfo.getTabListDisplayName();
+        if (name == null) name = Component.literal(playerInfo.getProfile().name());
+        return Optional.of(name);
+    }
 
-        Optional<Component> textOptional = waypoint.getName();
-        if (textOptional.isPresent()) {
-            Component text = textOptional.get();
-            Font textRenderer = client.font;
-            int width = textRenderer.width(text);
-            int x = getXFromYaw(context, yaw) - width / 2;
-            context.fill(x + 5 - 2, centerY - 10 - 2, x + width + 5 + 2, centerY - 10 + 9 + 2, ARGB.color(0.5F, CommonColors.BLACK));
-            context.text(textRenderer, text, x + 5, centerY - 10, CommonColors.WHITE);
-        }
+    protected static void renderNames(Minecraft client, GuiGraphicsExtractor context, DeltaTracker tickCounter, int centerY) {
+        ClientWaypointManager handler = client.player.connection.getWaypointManager();
+        if (!(handler instanceof IWaypointAccessor accessor)) return;
+        Stream<TrackedWaypoint> waypoints = accessor.getWaypointsUnsorted().stream().filter(waypoint -> !(waypoint instanceof DialWaypoint));
+        WaypointMatch best = getBestWaypoint(client, tickCounter, waypoints);
+        if (Math.abs(best.yaw) > 60) return;
+        
+        Optional<Component> textOptional = getWaypointName(best.waypoint);
+        if (!textOptional.isPresent()) return;
+
+        Component text = textOptional.get();
+        Font textRenderer = client.font;
+        int width = textRenderer.width(text);
+        int x = getXFromYaw(context, best.yaw) - width / 2;
+        context.fill(x + 5 - 2, centerY - 10 - 2, x + width + 5 + 2, centerY - 10 + 9 + 2, ARGB.color(0.5F, CommonColors.BLACK));
+        context.text(textRenderer, text, x + 5, centerY - 10, CommonColors.WHITE);
     }
 
     private static int getXFromYaw(GuiGraphicsExtractor context, double relativeYaw) {
