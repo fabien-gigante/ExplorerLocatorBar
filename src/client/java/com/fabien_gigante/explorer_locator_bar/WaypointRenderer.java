@@ -15,11 +15,9 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.waypoints.ClientWaypointManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
@@ -32,7 +30,9 @@ import net.minecraft.world.waypoints.Waypoint;
 
 public class WaypointRenderer {
 
-    protected static record WaypointMatch(TrackedWaypoint waypoint, double yaw) {}
+    protected static record WaypointMatch(TrackedWaypoint waypoint, double yaw) {
+        public boolean isNull() { return waypoint == null; }
+    }
     protected static WaypointMatch NO_MATCH = new WaypointMatch(null, Double.NaN);
     private static boolean distanceRendered = false;
 
@@ -41,14 +41,19 @@ public class WaypointRenderer {
         Entity cameraEntity = client.getCameraEntity();
         if (cameraEntity == null) return NO_MATCH;
         Level world = cameraEntity.level();
-        PartialTickSupplier entityTickProgress = (tickedEntity) -> tickCounter.getGameTimeDeltaPartialTick(
-                !world.tickRateManager().isEntityFrozen(tickedEntity)
-        );
-
+        PartialTickSupplier entityTickProgress = (tickedEntity) -> tickCounter.getGameTimeDeltaPartialTick(!world.tickRateManager().isEntityFrozen(tickedEntity));
         return waypoints
             .map(waypoint -> new WaypointMatch(waypoint, waypoint.yawAngleToCamera(client.level, camera, entityTickProgress)))
             .sorted(Comparator.comparingDouble(match -> Math.abs(match.yaw)))
             .findFirst().orElse(NO_MATCH);
+    }
+
+    protected static WaypointMatch getBestWaypoint(Minecraft client, DeltaTracker tickCounter, double maxYaw) {
+        ClientWaypointManager handler = client.getConnection().getWaypointManager();
+        if (!(handler instanceof IWaypointAccessor accessor)) return NO_MATCH;
+        Stream<TrackedWaypoint> waypoints = accessor.getWaypointsUnsorted().stream().filter(waypoint -> !(waypoint instanceof DialWaypoint));
+        WaypointMatch best = getBestWaypoint(client, tickCounter, waypoints);
+        return (best.isNull() || Math.abs(best.yaw) > maxYaw) ? NO_MATCH : best;
     }
 
     public static void render(Minecraft client, GuiGraphicsExtractor context, DeltaTracker tickCounter, int centerY) {
@@ -59,13 +64,12 @@ public class WaypointRenderer {
             renderNames(client, context, tickCounter, centerY);
     }
 
-    protected static Optional<Component> getWaypointName(TrackedWaypoint waypoint) {
+    protected static Optional<Component> getWaypointName(Minecraft client, TrackedWaypoint waypoint) {
         if (waypoint instanceof NamedWaypoint named) return named.getName();
-        // Could be a known player
+        // Could be a player
         UUID uuid = waypoint.id().left().orElse(null);
         if (uuid == null) return Optional.empty(); 
-        ClientPacketListener client = Minecraft.getInstance().getConnection();
-        PlayerInfo playerInfo = client.getPlayerInfo(uuid);
+        PlayerInfo playerInfo = client.getConnection().getPlayerInfo(uuid);
         if (playerInfo == null) return Optional.empty(); 
         Component name = playerInfo.getTabListDisplayName();
         if (name == null) name = Component.literal(playerInfo.getProfile().name());
@@ -73,13 +77,9 @@ public class WaypointRenderer {
     }
 
     protected static void renderNames(Minecraft client, GuiGraphicsExtractor context, DeltaTracker tickCounter, int centerY) {
-        ClientWaypointManager handler = client.player.connection.getWaypointManager();
-        if (!(handler instanceof IWaypointAccessor accessor)) return;
-        Stream<TrackedWaypoint> waypoints = accessor.getWaypointsUnsorted().stream().filter(waypoint -> !(waypoint instanceof DialWaypoint));
-        WaypointMatch best = getBestWaypoint(client, tickCounter, waypoints);
-        if (best.waypoint == null || Math.abs(best.yaw) > 60) return;
-        
-        Optional<Component> textOptional = getWaypointName(best.waypoint);
+        WaypointMatch best = getBestWaypoint(client, tickCounter, 60);
+        if (best.isNull()) return;
+        Optional<Component> textOptional = getWaypointName(client, best.waypoint);
         if (!textOptional.isPresent()) return;
 
         Component text = textOptional.get();
@@ -90,11 +90,11 @@ public class WaypointRenderer {
         context.text(textRenderer, text, x + 5, centerY - 10, CommonColors.WHITE);
     }
 
-    private static int getXFromYaw(GuiGraphicsExtractor context, double relativeYaw) {
+    protected static int getXFromYaw(GuiGraphicsExtractor context, double relativeYaw) {
         return Mth.ceil((context.guiWidth() - 9) / 2.0F) + (int)(relativeYaw * 173.0 / 2.0 / 60.0);
     }
 
-    private static double getDistance(Entity player, TrackedWaypoint waypoint) {
+    protected static double getDistance(Entity player, TrackedWaypoint waypoint) {
         double d2;
         if (ConfigManager.getConfig().showDistance() == Config.DistanceType.HORIZONTAL && waypoint instanceof TrackedWaypoint.Vec3iWaypoint wp) {
             Vec3 pos = Vec3.atCenterOf(wp.vector);
@@ -107,11 +107,8 @@ public class WaypointRenderer {
     }
 
     protected static void renderDistance(Minecraft client, GuiGraphicsExtractor context, DeltaTracker tickCounter, int centerY) {
-        ClientWaypointManager handler = client.player.connection.getWaypointManager();
-        if (!(handler instanceof IWaypointAccessor accessor)) return;
-        Stream<TrackedWaypoint> waypoints = accessor.getWaypointsUnsorted().stream().filter(waypoint -> !(waypoint instanceof DialWaypoint));
-        WaypointMatch best = getBestWaypoint(client, tickCounter, waypoints);
-        if (best.waypoint == null || Math.abs(best.yaw) > 10) return;
+        WaypointMatch best = getBestWaypoint(client, tickCounter, 10);
+        if (best.isNull()) return;
 
         double dist = getDistance(client.player, best.waypoint);
         String label = getDistanceShortString(dist);
@@ -130,7 +127,7 @@ public class WaypointRenderer {
         context.text(client.font, label, x, y, getColor(best.waypoint), false);
     }
 
-    private static String getDistanceShortString(double distance) {
+    protected static String getDistanceShortString(double distance) {
         if (Double.isNaN(distance)) return "";
         if (Double.isInfinite(distance)) return "∞";
         if (distance >= 10_000_000) return Math.round(distance / 1_000_000) + "M";
@@ -140,7 +137,7 @@ public class WaypointRenderer {
         return String.valueOf(Math.round(distance));
     }
 
-    private static int getColor(TrackedWaypoint waypoint) {
+    protected static int getColor(TrackedWaypoint waypoint) {
         Waypoint.Icon config = waypoint.icon();
         Optional<Integer> color = config instanceof MapWaypoint.Config mapConfig ? mapConfig.textColor : config.color;
         return color.orElseGet( () -> {
