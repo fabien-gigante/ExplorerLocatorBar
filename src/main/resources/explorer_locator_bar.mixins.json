@@ -6,6 +6,7 @@
         "MapItemMixin", 
         "MapDecorationsEntryMixin",
         "MapItemSavedDataMixin",
+        "ExplorationMapFunctionMixin",
         "CompassItemMixin",
 		"GrindstoneMenuMixin",
 		"GrindstoneMenuTopInputSlotMixin"
