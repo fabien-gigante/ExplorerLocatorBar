@@ -49,7 +49,7 @@ public class MapWaypointStyleAssets {
 
     public static void reload() {
         Minecraft client = Minecraft.getInstance();
-        WaypointStyleManager assetManager = client.getWaypointStyles();
+        WaypointStyleManager assetManager = client.gui.hud.getWaypointStyles();
         assetManager.waypointStyles = new HashMap<>(assetManager.waypointStyles); // Make it mutable
         STYLES.clear();
         BuiltInRegistries.MAP_DECORATION_TYPE.listElements().forEach(type -> {

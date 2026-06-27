@@ -37,7 +37,7 @@ public class WaypointRenderer {
     private static boolean distanceRendered = false;
 
     protected static WaypointMatch getBestWaypoint(Minecraft client, DeltaTracker tickCounter, Stream<TrackedWaypoint> waypoints) {
-        Camera camera = client.gameRenderer.getMainCamera();
+        Camera camera = client.gameRenderer.mainCamera();
         Entity cameraEntity = client.getCameraEntity();
         if (cameraEntity == null) return NO_MATCH;
         Level world = cameraEntity.level();

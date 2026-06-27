@@ -1,5 +1,5 @@
 classTweaker v1 official
-accessible	class	net/minecraft/client/gui/Gui$ContextualInfo
+accessible	class	net/minecraft/client/gui/Hud$ContextualInfo
 accessible	class	net/minecraft/world/waypoints/TrackedWaypoint$Vec3iWaypoint
 accessible	class	net/minecraft/world/waypoints/TrackedWaypoint$AzimuthWaypoint
 accessible	field	net/minecraft/client/resources/WaypointStyleManager	waypointStyles	Ljava/util/Map;

@@ -4,9 +4,9 @@ import com.fabien_gigante.explorer_locator_bar.WaypointRenderer;
 import com.fabien_gigante.explorer_locator_bar.config.ConfigManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.contextualbar.ContextualBarRenderer;
+import net.minecraft.client.gui.contextualbar.ContextualBar;
 import net.minecraft.client.waypoints.ClientWaypointManager;
 
 import org.spongepowered.asm.mixin.Final;
@@ -17,8 +17,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Gui.class)
-public abstract class GuiMixin {
+@Mixin(Hud.class)
+public abstract class HudMixin {
     @Shadow @Final private Minecraft minecraft;
 
     @Redirect(
@@ -31,18 +31,18 @@ public abstract class GuiMixin {
     }
 
     @Inject(method = "nextContextualInfoState", at = @At("HEAD"), cancellable = true)
-    private void forceLocatorBarWhenPlayerListOpen(CallbackInfoReturnable<Gui.ContextualInfo> info) {
+    private void forceLocatorBarWhenPlayerListOpen(CallbackInfoReturnable<Hud.ContextualInfo> info) {
         boolean canShow = ConfigManager.getConfig().tabForcesLocatorBar()
                 && (ConfigManager.getConfig().showInSpectator() || (minecraft.player != null && !minecraft.player.isSpectator()));
-        if (canShow && minecraft.options.keyPlayerList.isDown()) info.setReturnValue(Gui.ContextualInfo.LOCATOR);
+        if (canShow && minecraft.options.keyPlayerList.isDown()) info.setReturnValue(Hud.ContextualInfo.LOCATOR);
     }
 
     @Redirect(
         method = "extractHotbarAndDecorations",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/contextualbar/ContextualBarRenderer;extractExperienceLevel(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Font;I)V")
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/contextualbar/ContextualBar;extractExperienceLevel(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/gui/Font;I)V")
     )
     private void conditionallyExtractExperienceLevel(GuiGraphicsExtractor context, Font textRenderer, int level) {
         if (WaypointRenderer.shouldShowExperienceLevel())
-            ContextualBarRenderer.extractExperienceLevel(context, textRenderer, level);
+            ContextualBar.extractExperienceLevel(context, textRenderer, level);
     }    
 }

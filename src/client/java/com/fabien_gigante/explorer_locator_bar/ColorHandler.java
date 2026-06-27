@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.MapItemColor;
@@ -65,7 +66,8 @@ public class ColorHandler {
         if (formatting == null) {
             return Optional.empty();
         } else {
-            Integer integer = formatting.getColor();
+            TextColor textColor = TextColor.fromLegacyFormat(formatting);
+            Integer integer = textColor == null ? null : textColor.getValue();
             return integer == null ? Optional.empty() : Optional.of(ARGB.color(255, integer));
         }
     }
