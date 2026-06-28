@@ -1,10 +1,10 @@
 {
-    "modmenu.nameTranslation.explorer_locator_bar": "Locator Lodestones - Enhanced",
-    "modmenu.summaryTranslation.explorer_locator_bar": "Adds Lodestones - and more - to the Player Locator Bar.",
-    "modmenu.descriptionTranslation.explorer_locator_bar": "Adds Lodestones - and more - to the Player Locator Bar.\n\nCompasses, Recovery Compasses, Lodestone Compasses, Maps in your Inventory (including in Bundles) add Waypoints to your Locator Bar.",
+    "modmenu.nameTranslation.explorer_locator_bar": "Explorer Locator Bar",
+    "modmenu.summaryTranslation.explorer_locator_bar": "Adds Compass targets and Maps points of interest to the Player Locator Bar.",
+    "modmenu.descriptionTranslation.explorer_locator_bar": "Adds Compass targets and Maps points of interest to the Player Locator Bar.\n\nCompasses, Recovery Compasses, Lodestone Compasses, Maps in your Inventory (including in Bundles) add Waypoints to your Locator Bar.",
     "explorer_locator_bar.reload": "Reloaded configs",
 
-    "explorer_locator_bar.config.title": "Locator Lodestones - Enhanced: Configuration",
+    "explorer_locator_bar.config.title": "Explorer Locator Bar: Configuration",
     "explorer_locator_bar.config.general": "General Settings",
     "explorer_locator_bar.config.colors": "Color Settings",
     "explorer_locator_bar.config.tab_forces_locator_bar": "Tab Forces Locator Bar",

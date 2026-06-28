@@ -1,10 +1,10 @@
 {
-    "modmenu.nameTranslation.explorer_locator_bar": "Locator Lodestones - Amélioré",
-    "modmenu.summaryTranslation.explorer_locator_bar": "Ajoute les blocs de magnétites — et plus encore — à la barre de localisation du joueur.",
-    "modmenu.descriptionTranslation.explorer_locator_bar": "Ajoute les blocs de magnétites — et plus encore — à la barre de localisation du joueur.\n\nLes boussoles, boussoles de récupération, boussoles magnétisées et cartes dans votre inventaire (y compris dans les sacs) ajoutent des repères à votre barre de localisation.",
+    "modmenu.nameTranslation.explorer_locator_bar": "Barre de Localisation de l'Explorateur",
+    "modmenu.summaryTranslation.explorer_locator_bar": "Ajoute les cibles des boussoles et les points d'intérêt des cartes à la Barre de Localisation du joueur.",
+    "modmenu.descriptionTranslation.explorer_locator_bar": "Ajoute les cibles des boussoles et les points d'intérêt des cartes à la Barre de Localisation du joueur.\n\nLes boussoles, les boussoles de récupération, les boussoles de magnétite ainsi que les cartes présentes dans votre inventaire (y compris dans les sacs) ajoutent des points de repère à votre Barre de Localisation.",
     "explorer_locator_bar.reload": "Configuration rechargée",
 
-    "explorer_locator_bar.config.title": "Locator Lodestones - Amélioré : Configuration",
+    "explorer_locator_bar.config.title": "Barre de Localisation de l'Explorateur : Configuration",
     "explorer_locator_bar.config.general": "Paramètres généraux",
     "explorer_locator_bar.config.colors": "Paramètres des couleurs",
     "explorer_locator_bar.config.tab_forces_locator_bar": "Afficher la barre de localisation avec Tab",
