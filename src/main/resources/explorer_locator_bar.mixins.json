@@ -5,6 +5,7 @@
     "mixins": [
         "MapItemMixin", 
         "MapDecorationsEntryMixin",
+        "LodestoneTrackerMixin",
         "MapItemSavedDataMixin",
         "ExplorationMapFunctionMixin",
         "CompassItemMixin",

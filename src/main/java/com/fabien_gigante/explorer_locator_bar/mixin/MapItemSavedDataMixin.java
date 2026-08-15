@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.fabien_gigante.explorer_locator_bar.MapComponentsHelper;
+import com.fabien_gigante.explorer_locator_bar.ComponentsHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -26,7 +26,7 @@ public abstract class MapItemSavedDataMixin {
     @Inject(method = "calculateDecorationLocationAndType", at = @At("RETURN"), cancellable = true)
     private void fixBannerRotation(Holder<MapDecorationType> type, @Nullable LevelAccessor world, double rotation, float dx, float dz, CallbackInfoReturnable<MapItemSavedData.MapDecorationLocation> cir) {
         MapItemSavedData.MapDecorationLocation marker = cir.getReturnValue();
-        if (marker != null && this.dimension == Level.NETHER && MapComponentsHelper.isBanner(type))
+        if (marker != null && this.dimension == Level.NETHER && ComponentsHelper.isBanner(type))
             cir.setReturnValue(new MapItemSavedData.MapDecorationLocation(type, marker.x(), marker.y(), (byte)8));
     }
 

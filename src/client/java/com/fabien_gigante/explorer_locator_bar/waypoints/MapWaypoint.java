@@ -16,7 +16,7 @@ import net.minecraft.world.waypoints.TrackedWaypoint;
 import net.minecraft.world.waypoints.Waypoint;
 import net.minecraft.world.waypoints.WaypointStyleAsset;
 import org.jetbrains.annotations.Nullable;
-import com.fabien_gigante.explorer_locator_bar.IDecorationExt;
+import com.fabien_gigante.explorer_locator_bar.IMapDecorationsEntryExt;
 import com.fabien_gigante.explorer_locator_bar.MapWaypointStyleAssets;
 
 public class MapWaypoint extends NamedWaypoint {
@@ -27,7 +27,7 @@ public class MapWaypoint extends NamedWaypoint {
     }
     public MapWaypoint(String source, Entry deco, Optional<Component> name) {
         this(source, MapWaypointStyleAssets.getStyle(deco.type()), MapWaypointStyleAssets.getColor(deco.type()), getPosOf(deco), name);
-        hasY =  (Object)deco instanceof IDecorationExt ext && ext.getY().isPresent();
+        hasY =  (Object)deco instanceof IMapDecorationsEntryExt ext && ext.getY().isPresent();
     }
     public MapWaypoint(String source, MapDecoration deco, Vec3i pos) {
         this(source, MapWaypointStyleAssets.getStyle(deco.type()), MapWaypointStyleAssets.getColor(deco.type()), pos, deco.name());
@@ -35,7 +35,7 @@ public class MapWaypoint extends NamedWaypoint {
     
     private static Vec3i getPosOf(Entry deco) {
         double x = Math.floor(deco.x());
-        double y = (Object)deco instanceof IDecorationExt ext ? Math.floor(ext.getY().orElse(0d)) : 0d;
+        double y = (Object)deco instanceof IMapDecorationsEntryExt ext ? Math.floor(ext.getY().orElse(0d)) : 0d;
         double z = Math.floor(deco.z());
         return new Vec3i((int)x, (int)y, (int)z);
     }

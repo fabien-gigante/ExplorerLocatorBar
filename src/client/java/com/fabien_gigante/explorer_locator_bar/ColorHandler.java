@@ -12,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.MapItemColor;
 
 public class ColorHandler {
     public static Optional<Integer> getColor(ItemStack stack) {
@@ -20,9 +19,7 @@ public class ColorHandler {
     }
     
     public static Optional<Integer> getColor(ItemStack stack, boolean checkColorComponent) {
-        Optional<Integer> color = Optional.empty();
-        if (checkColorComponent && stack.get(DataComponents.MAP_COLOR) instanceof MapItemColor mapColor)
-            color = Optional.of(mapColor.rgb());
+        Optional<Integer> color = checkColorComponent ? ComponentsHelper.getLodestoneTrackerColor(stack) : Optional.empty();
         if (!ConfigManager.getConfig().colors().colorCustomization()) return color;
         Optional<Integer> customColor = getColor(stack.get(DataComponents.CUSTOM_NAME));
         if (customColor.isEmpty()) customColor = getColor(stack.get(DataComponents.ITEM_NAME));

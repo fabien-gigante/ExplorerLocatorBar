@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.fabien_gigante.explorer_locator_bar.IDecorationExt;
+import com.fabien_gigante.explorer_locator_bar.IMapDecorationsEntryExt;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +23,7 @@ public class ExplorationMapFunctionMixin {
         MapDecorations decorations = map.get(DataComponents.MAP_DECORATIONS);
         if (decorations == null) return;
         decorations.decorations().values().stream()
-            .filter(IDecorationExt.class::isInstance).map(IDecorationExt.class::cast)
+            .filter(IMapDecorationsEntryExt.class::isInstance).map(IMapDecorationsEntryExt.class::cast)
             .forEach(ext -> ext.setDimension(Optional.of(context.getLevel().dimension())));
     }
 }

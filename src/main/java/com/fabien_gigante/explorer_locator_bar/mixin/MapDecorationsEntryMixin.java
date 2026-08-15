@@ -2,7 +2,7 @@ package com.fabien_gigante.explorer_locator_bar.mixin;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.fabien_gigante.explorer_locator_bar.IDecorationExt;
+import com.fabien_gigante.explorer_locator_bar.IMapDecorationsEntryExt;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 
 @Mixin(MapDecorations.Entry.class)
-public abstract class MapDecorationsEntryMixin implements IDecorationExt {
+public abstract class MapDecorationsEntryMixin implements IMapDecorationsEntryExt {
     @Shadow @Final @Mutable
     public static Codec<MapDecorations.Entry> CODEC;
 
@@ -38,6 +38,8 @@ public abstract class MapDecorationsEntryMixin implements IDecorationExt {
     public Optional<Double> getY() { return y; }
     @Override
     public void setY(Optional<Double> y) { this.y = y; }
+
+    // TODO ? @WrapMethod for equals and hashCode to include name, dimension, and y in the comparison and hash calculation
 
     static {
         CODEC = RecordCodecBuilder.create(instance ->

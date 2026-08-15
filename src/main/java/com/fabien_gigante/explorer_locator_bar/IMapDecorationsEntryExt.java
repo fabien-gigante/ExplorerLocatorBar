@@ -5,7 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
-public interface IDecorationExt {
+public interface IMapDecorationsEntryExt {
     Optional<Double> getY();
     void setY(Optional<Double> y);
     Optional<Component> getName();

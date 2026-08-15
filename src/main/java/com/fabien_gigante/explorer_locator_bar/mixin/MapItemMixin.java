@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import com.fabien_gigante.explorer_locator_bar.MapComponentsHelper;
+import com.fabien_gigante.explorer_locator_bar.ComponentsHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -27,7 +27,7 @@ public abstract class MapItemMixin {
         )
     )
     private void updateBannerComponent(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
-        MapComponentsHelper.updateBannerComponent(context.getLevel(), context.getItemInHand(), context.getClickedPos());
+        ComponentsHelper.updateBannerComponent(context.getLevel(), context.getItemInHand(), context.getClickedPos());
     }
 
     @Inject(
@@ -39,6 +39,6 @@ public abstract class MapItemMixin {
         )
     )
     private void updateBannerComponents(ItemStack stack, ServerLevel world, Entity entity, @Nullable EquipmentSlot slot, CallbackInfo ci) {
-        MapComponentsHelper.updateBannerComponents(world, stack);
+        ComponentsHelper.updateBannerComponents(world, stack);
     }
 }
