@@ -39,6 +39,8 @@ public abstract class MapDecorationsEntryMixin implements IDecorationExt {
     @Override
     public void setY(Optional<Double> y) { this.y = y; }
 
+    // TODO ? @WrapMethod for equals and hashCode to include name, dimension, and y in the comparison and hash calculation
+
     static {
         CODEC = RecordCodecBuilder.create(instance ->
             instance.group(

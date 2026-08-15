@@ -29,7 +29,7 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu implemen
 		if (original != ItemStack.EMPTY || !isValidLodestoneTrackerRecipe(firstInput, secondInput)) return original;
 		ItemStack result = firstInput.copy();
 		result.remove(DataComponents.LODESTONE_TRACKER);
-		result.remove(DataComponents.MAP_COLOR);
+		result.remove(DataComponents.MAP_COLOR); // Legacy component, remove if present
 		return result;
 	}
 

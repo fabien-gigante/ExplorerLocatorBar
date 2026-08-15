@@ -6,24 +6,20 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.component.LodestoneTracker;
 import net.minecraft.world.item.component.MapDecorations;
-import net.minecraft.world.item.component.MapItemColor;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.saveddata.maps.MapBanner;
 import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
-public class MapComponentsHelper {
+public class ComponentsHelper {
     private static Set<Holder<MapDecorationType>> BANNER_TYPES = Set.of(
         MapDecorationTypes.WHITE_BANNER, MapDecorationTypes.ORANGE_BANNER, MapDecorationTypes.MAGENTA_BANNER, MapDecorationTypes.LIGHT_BLUE_BANNER,
 	    MapDecorationTypes.YELLOW_BANNER, MapDecorationTypes.LIME_BANNER, MapDecorationTypes.PINK_BANNER, MapDecorationTypes.GRAY_BANNER,
@@ -73,18 +69,14 @@ public class MapComponentsHelper {
         var keys = mapState.getBanners().stream().map(MapBanner::getId).collect(Collectors.toSet());
         removeBannerComponents(stack, key -> !keys.contains(key));
     }
-
-    private static int getRandomColor(long seed) {
-        int color = new SingleThreadedRandomSource(seed).next(24);
-        return ARGB.color(255, ARGB.setBrightness(color, 0.9f));
+     
+    public static void cycleLodestoneTrackerColor(ItemStack stack, LodestoneTracker newTracker) {
+        ILodestoneTrackerExt trackerExt = (ILodestoneTrackerExt)(Object)newTracker;
+        if (trackerExt != null) trackerExt.cycleColor(stack.get(DataComponents.LODESTONE_TRACKER));
     }
-    
-    public static void setRandomColorComponent(ItemStack stack, LodestoneTracker newTracker) {
-        LodestoneTracker currentTracker = stack.get(DataComponents.LODESTONE_TRACKER);
-        GlobalPos currentTarget = currentTracker == null ? null : currentTracker.target().orElse(null);
-        GlobalPos newTarget = newTracker.target().orElse(null);
-        MapItemColor mapColor = (currentTarget != null && currentTarget.equals(newTarget)) ? stack.get(DataComponents.MAP_COLOR) : null;
-        int color = getRandomColor(mapColor == null ? newTarget.pos().asLong() : mapColor.rgb());
-        stack.set(DataComponents.MAP_COLOR, new MapItemColor(color));
+
+    public static Optional<Integer> getLodestoneTrackerColor(ItemStack stack) {
+        ILodestoneTrackerExt trackerExt = (ILodestoneTrackerExt)(Object)stack.get(DataComponents.LODESTONE_TRACKER);
+        return trackerExt != null ? Optional.of(trackerExt.getColor()) : Optional.empty();
     }
 }
