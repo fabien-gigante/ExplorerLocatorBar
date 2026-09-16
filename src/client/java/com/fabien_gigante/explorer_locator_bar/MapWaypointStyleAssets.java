@@ -42,7 +42,22 @@ public class MapWaypointStyleAssets {
         Map.entry(MapDecorationTypes.BROWN_BANNER,      MapColor.COLOR_BROWN.col),
         Map.entry(MapDecorationTypes.GREEN_BANNER,      MapColor.COLOR_GREEN.col),
         Map.entry(MapDecorationTypes.RED_BANNER,        MapColor.COLOR_RED.col),
-        Map.entry(MapDecorationTypes.BLACK_BANNER,      MapColor.COLOR_BLACK.col));
+        Map.entry(MapDecorationTypes.BLACK_BANNER,      MapColor.COLOR_BLACK.col),
+        Map.entry(MapDecorationTypes.WOODLAND_MANSION,  0x524C44),
+        Map.entry(MapDecorationTypes.OCEAN_MONUMENT,    0x3A7265),
+        Map.entry(MapDecorationTypes.DESERT_VILLAGE,    MapColor.COLOR_LIGHT_GRAY.col),
+        Map.entry(MapDecorationTypes.PLAINS_VILLAGE,    MapColor.COLOR_LIGHT_GRAY.col),
+        Map.entry(MapDecorationTypes.SAVANNA_VILLAGE,   MapColor.COLOR_LIGHT_GRAY.col),
+        Map.entry(MapDecorationTypes.SNOWY_VILLAGE,     MapColor.COLOR_LIGHT_GRAY.col),
+        Map.entry(MapDecorationTypes.TAIGA_VILLAGE,     MapColor.COLOR_LIGHT_GRAY.col),
+        Map.entry(MapDecorationTypes.JUNGLE_TEMPLE,     MapColor.STONE.col),
+        Map.entry(MapDecorationTypes.SWAMP_HUT,         MapColor.WOOD.col),
+        Map.entry(MapDecorationTypes.TRIAL_CHAMBERS,    0xC26B4C),
+        Map.entry(MapDecorationTypes.ABANDONED_CAMP,    MapColor.WOOL.col),
+        Map.entry(MapDecorationTypes.ANCIENT_CITY,      MapColor.COLOR_CYAN.col),
+        Map.entry(MapDecorationTypes.DESERT_PYRAMID,    MapColor.SAND.col),
+        Map.entry(MapDecorationTypes.MINESHAFT,         MapColor.COLOR_LIGHT_GRAY.col),
+        Map.entry(MapDecorationTypes.OCEAN_RUIN_WARM,   MapColor.SAND.col));
 
     private static final int NEAR_DISTANCE = 8 * WaypointStyle.DEFAULT_NEAR_DISTANCE;
     private static final int FAR_DISTANCE = 8 * WaypointStyle.DEFAULT_FAR_DISTANCE;
@@ -67,8 +82,6 @@ public class MapWaypointStyleAssets {
         return STYLES.get(type);
     }
     public static int getColor(Holder<MapDecorationType> type) {
-        int color = type.value().hasMapColor() ? type.value().mapColor() : COLORS.getOrDefault(type, MapDecorationType.NO_MAP_COLOR);
-        return ARGB.opaque(color);
+        return ARGB.opaque(COLORS.getOrDefault(type, -1));
     }
-    
 }

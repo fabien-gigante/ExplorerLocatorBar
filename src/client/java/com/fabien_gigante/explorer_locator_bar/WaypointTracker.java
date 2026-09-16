@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.component.LodestoneTracker;
 import net.minecraft.world.item.component.MapDecorations;
 import net.minecraft.world.level.Level;
@@ -134,7 +135,7 @@ public class WaypointTracker extends AbstractTracker {
             }
         }
 
-        if (ConfigManager.getConfig().showMaps() && stack.is(Items.FILLED_MAP)) {
+        if (ConfigManager.getConfig().showMaps() && stack.getItem() instanceof MapItem) {
             MapId mapIdComponent = stack.get(DataComponents.MAP_ID);
             MapDecorations mapDecorationsComponent = stack.get(DataComponents.MAP_DECORATIONS);
             if (mapIdComponent != null && mapDecorationsComponent != null) {

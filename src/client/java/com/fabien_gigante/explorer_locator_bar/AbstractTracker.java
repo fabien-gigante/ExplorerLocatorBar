@@ -66,7 +66,7 @@ public abstract class AbstractTracker {
             ListIterator<ItemStack> it = stacks.listIterator();
             while (it.hasNext()) {
                 BundleContents contentsComponent = it.next().get(DataComponents.BUNDLE_CONTENTS);
-                if (contentsComponent != null) contentsComponent.itemCopyStream().forEach(it::add);
+                if (contentsComponent != null) contentsComponent.itemCopies().forEach(it::add);
             }
         }
         return stacks;
