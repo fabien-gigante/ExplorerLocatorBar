@@ -89,7 +89,7 @@ public class WaypointTracker extends AbstractTracker {
 
         if (ConfigManager.getConfig().dialResolution() > 0) {
             boolean withMaps = ConfigManager.getConfig().showMaps();
-            if (stacks.stream().anyMatch(stack -> stack.is(Items.COMPASS) || stack.is(Items.RECOVERY_COMPASS) || (withMaps && stack.is(Items.FILLED_MAP))))
+            if (stacks.stream().anyMatch(stack -> stack.is(Items.COMPASS) || stack.is(Items.RECOVERY_COMPASS) || (withMaps && stack.getItem() instanceof MapItem)))
                 waypoints.addAll(COMPASS_DIAL_WAYPOINTS);
         }
 
